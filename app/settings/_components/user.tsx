@@ -8,7 +8,7 @@ import type { GetUser } from "@/lib/client/types";
 import { useQuery } from "@tanstack/react-query";
 
 export function User() {
-    const {  data: response } = useQuery<GetUser>({
+    const { data: response } = useQuery<GetUser>({
         queryKey: ["user"],
         queryFn: () => fetch("/api/user").then(res => res.json()),
     });
@@ -21,8 +21,7 @@ export function User() {
                 </AvatarFallback>
             </Avatar>
             <div className="h-[25px] flex items-center">
-                {response && response.data ? <p className="text-xs font-semibold">{response.data.email}</p> :
-                    <></>}
+                {response && response.data ? <p className="text-xs font-semibold">{response.data.email}</p> : <></>}
             </div>
         </div>
     );

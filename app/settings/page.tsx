@@ -2,7 +2,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Back } from "./_components/back";
 import { Plan } from "./_components/plan";
 import { User } from "./_components/user";
-// import { Payment } from "./_components/payment";
 import { History } from "./_components/history";
 import { DeleteAccount } from "./_components/delete-account";
 import { Logout } from "@/components/logout";

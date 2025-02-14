@@ -3,16 +3,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { GetMessages, GetMessagesResponse, GetUserPreferences } from "@/lib/client/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useChat } from "ai/react"
-import { Sparkles } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { Markdown } from "./markdown"
 import { SwitchModels } from "./models"
 import { toast } from "sonner"
+import { DataDropdown } from "./data-dropdown"
 
 function UserMessage({ content }: { content: string }) {
     return (
         <div className="flex justify-end w-full">
-            <div className="text-sm max-w-[500px] border py-2 px-4 rounded-xl">
+            <div className="text-sm bg-foreground/90 text-background  max-w-[500px] border py-2 px-4 rounded-full">
                 <p>{content}</p>
             </div>
         </div>
@@ -22,8 +22,7 @@ function UserMessage({ content }: { content: string }) {
 function AIMessage({ content }: { action?: string; content: string; }) {
     return (
         <div className="flex w-full py-[24px] gap-[8px]">
-            <div className="flex border p-[8px] h-[40px] w-[40px] rounded-[99px] items-center"><Sparkles size={24} strokeWidth={0.5} /></div>
-            <div className="flex flex-col w-full p-[4px]">
+            <div className="flex flex-col w-full py-2 px-6">
                 <Markdown>{content}</Markdown>
             </div>
         </div>
@@ -62,38 +61,35 @@ export function UnmemoizedChat({ id, initialMessages, model }: { id: string, ini
     });
 
     return (
-        <div className="flex justify-center h-screen">
-            <div className="flex flex-col px-4 max-w-3xl items-stretch w-full">
-                <div className="flex flex-col overflow-y-scroll py-[50px] h-[calc(100vh-109px)]">
-                    {messages.length === 0 ?
-                        <h1 className="text-2xl">What can I help with?</h1> :
-                        messages.map(m => (
-                            <div key={m.id} className="whitespace-pre-wrap">
-                                {m.role === 'user' ? <UserMessage content={m.content} /> : <AIMessage content={m.content} />}
-                            </div>
-                        ))}
-                </div>
-                <div className="w-full h-[108px]">
-                    <div className="border-t border-x border-input w-full p-[4px] pt-0 rounded-t-lg group">
-                        <form onSubmit={handleSubmit}>
-                            <Textarea
-                                className="w-full resize-none h-[72px]"
-                                value={input}
-                                placeholder="Ask anything"
-                                onChange={handleInputChange}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter" && e.shiftKey == false) {
-                                        e.preventDefault();
-                                        //@ts-expect-error comvert to form element
-                                        (e.target.form as HTMLFormElement).requestSubmit();
-                                    }
-                                }}
-                            />
-                        </form>
-                        <div className="flex h-[32px] px-3 gap-[2px]">
-                            <SwitchModels />
+        <div className="flex flex-col flex-1 w-full items-center">
+            <div className="flex flex-col overflow-y-auto pt-3 pb-[96px] px-2 w-[calc(100%-24px)] max-w-3xl ">
+                {messages.length === 0 ?
+                    <h1 className="text-2xl">What can I help with?</h1> :
+                    messages.map(m => (
+                        <div key={m.id}>
+                            {m.role === 'user' ? <UserMessage content={m.content} /> : <AIMessage content={m.content} />}
                         </div>
-                    </div>
+                    ))}
+            </div>
+            <div className="bg-background fixed bottom-0 z-1 border border-input pt-0 rounded-lg p-1 pt-0 lg:w-[calc(100%-24px)] w-[500px] max-w-3xl ">
+                <form onSubmit={handleSubmit}>
+                    <Textarea
+                        className="w-full resize-none h-[72px]"
+                        value={input}
+                        placeholder="Ask anything"
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && e.shiftKey == false) {
+                                e.preventDefault();
+                                //@ts-expect-error comvert to form element
+                                (e.target.form as HTMLFormElement).requestSubmit();
+                            }
+                        }}
+                    />
+                </form>
+                <div className="flex h-[32px] px-3 gap-[2px]">
+                    <SwitchModels />
+                    <DataDropdown/>
                 </div>
             </div>
         </div>

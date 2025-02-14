@@ -9,7 +9,7 @@ export async function Header() {
     const session = await auth()
 
     return (
-        <header className="w-full border-b">
+        <header className="bg-header w-full border-b">
             <div className="mx-auto max-w-5xl flex items-center justify-between py-4 px-6">
                 <Link href="/">
                     <span className="text-lg font-semibold">Sable</span>

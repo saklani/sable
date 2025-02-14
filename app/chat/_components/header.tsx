@@ -15,7 +15,7 @@ export function Header() {
                     router.refresh() // next.js seems to not re-render unless refreshed in production
                     router.push("/chat")
                 }}>
-                    <Plus color="black" strokeWidth={0.9} /> <span className="sr-only">New Chat</span>
+                    <Plus strokeWidth={0.9} /> <span className="sr-only">New Chat</span>
                 </SidebarGroupAction>
             </SidebarGroup>
         </SidebarHeader>

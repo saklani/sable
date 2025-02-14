@@ -77,3 +77,13 @@ export const GetChatsRequestSchema = z.object({
 export const GetChatsResponseSchema = z.array(GetChatResponseSchema)
 
 
+// Schema for file upload response
+export const FileUploadResponseSchema = z.object({
+    url: z.string().url(),
+    fileId: z.string(),
+});
+
+// Schema for file metadata
+export const FileMetadataSchema = z.object({
+    url: z.string().url(),
+});

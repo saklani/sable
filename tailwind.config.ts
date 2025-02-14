@@ -11,6 +11,8 @@ export default {
 		extend: {
 			colors: {
 				background: 'hsl(var(--background))',
+				header: 'hsl(var(--header))',
+				footer: 'hsl(var(--footer))',
 				foreground: 'hsl(var(--foreground))',
 				card: {
 					DEFAULT: 'hsl(var(--card))',
@@ -39,11 +41,6 @@ export default {
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				text: {
-					title: 'hsl(var(--text-title))',
-					subtitle: 'hsl(var(--text-subtitle))',
-					info: 'hsl(var(--text-info))',
 				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

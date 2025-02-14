@@ -8,7 +8,6 @@ export async function AppSidebar() {
   return (
     <Sidebar>
       <Header />
-      <SidebarSeparator />
       <Content />
       <SidebarSeparator />
       <Footer />
