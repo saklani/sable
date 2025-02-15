@@ -37,7 +37,7 @@ function ManageData() {
 export function DataDropdown() {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild disabled>
                 <Button variant={"outline"} size={"icon"}>
                     <File />
                     <span className="sr-only">File options</span>
