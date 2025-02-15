@@ -4,11 +4,15 @@ import * as schema from "../schema";
 import { execute } from "./utils";
 
 
-export async function createObject({ id, ...rest }: Omit<schema.Object, "createdAt"| "status">) {
+export async function createObject({ id, ...rest }: Omit<schema.Object, "createdAt" | "status" | "updatedAt" | "url">) {
     return execute(`create object: ${id}`, async () => {
         await db.insert(schema.object).values({ id, ...rest })
         return id
     })
+}
+
+export async function updateObject({ id, ...rest }: Pick<schema.Object, "id"> & Partial<schema.Object>) {
+    return execute(`update object: ${id}`, async () => (await db.update(schema.object).set({ ...rest }).where(eq(schema.object.id, id)).returning()).at(0))
 }
 
 export async function deleteObject({ id, userId }: Pick<schema.Object, "id" | "userId">) {

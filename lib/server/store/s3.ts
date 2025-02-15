@@ -22,7 +22,7 @@ export class S3Storage implements IStoreProvider {
                 accessKeyId: config.accessKeyId,
                 secretAccessKey: config.secretAccessKey,
             },
-            region: config.region || "us-east-1",
+            region: "us-east-1"
         });
         this.bucketName = config.bucketName;
         this.expirySeconds = config.expirySeconds || 3600; // Default 1 hour expiry
@@ -51,7 +51,7 @@ export class S3Storage implements IStoreProvider {
 
             await this.client.send(command);
 
-            return `https://${this.bucketName}.s3.${this.client.config.region}.amazonaws.com/${key}`;
+            return `https://${this.bucketName}.s3.us-east-1.amazonaws.com/${key}`;
         } catch (error) {
             console.error("S3 upload error:", error);
             throw new Error(`Failed to upload file to S3: ${(error as Error).message}`);

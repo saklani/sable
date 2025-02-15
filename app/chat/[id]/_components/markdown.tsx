@@ -2,27 +2,16 @@ import Link from 'next/link';
 import React, { memo } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { cn } from "@/lib/utils"
 
 const components: Partial<Components> = {
   pre: ({ children }) => <>{children}</>,
-  code: ({ className, node, children, ...rest }) => {
-    const match = /language-(\w+)/.exec(className || '')
-    return match ? (
-      //@ts-ignore
-      <SyntaxHighlighter
-        {...rest}
-        PreTag="div"
-        language={match.at(1)}
-      >
-        {String(children).replace(/\n$/, '')}
-      </SyntaxHighlighter>
-    ) : (
+  code: ({ node, className, children, ...rest }) => {
+    return (
       <code {...rest} className={cn(className, "text-[14px] bg-gray-500 text-foreground rounded-lg py-[1px] px-2")}>
         {children}
       </code>
-    )
+    );
   },
   ol: ({ node, children, ...props }) => {
     return (

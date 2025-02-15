@@ -41,7 +41,7 @@ export async function GET() {
 
 
 async function LimitReached({ userId }: { userId: string }) {
-    const plan = await queries.getPlan({ userId })
+    const plan = await queries.getUserPlan({ userId })
     return (plan && plan.messageUsage >= plan.messageLimit)
 }
 

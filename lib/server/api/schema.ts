@@ -83,7 +83,20 @@ export const FileUploadResponseSchema = z.object({
     fileId: z.string(),
 });
 
-// Schema for file metadata
-export const FileMetadataSchema = z.object({
-    url: z.string().url(),
+const ObjectStatusEnum = z.enum([
+    'created',
+    'processing',
+    'ready',
+    'failed'
+]);
+export const GetObjectResponseSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    type: z.string().optional(),
+    size: z.number().optional(),
+    url: z.string().url().optional(),
+    metadata: z.string().optional(),
+    status: ObjectStatusEnum,
+    createdAt: z.date(),
+    updatedAt: z.date(),
 });

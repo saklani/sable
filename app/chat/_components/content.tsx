@@ -43,7 +43,6 @@ export function Content() {
 
 
 function ChatItem({ id, title }: { id: string; title: string; }) {
-
     const pathname = usePathname()
     const router = useRouter()
     const queryClient = useQueryClient()
@@ -55,7 +54,7 @@ function ChatItem({ id, title }: { id: string; title: string; }) {
         },
     })
     return (
-        <SidebarMenuItem key={id} className={pathname.split('/').at(-1) === id ? "bg-sidebar-select" : ""}>
+        <SidebarMenuItem key={id} className={pathname.split('/').at(2) === id ? "bg-sidebar-select" : ""}>
             <SidebarMenuButton
                 onClick={() => router.push(`/chat/${id}`)}>
                 <span>{title}</span>

@@ -1,7 +1,6 @@
-
+import { signOut } from "@/auth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarFooter, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { Logout } from "./logout";
 import { UserMenu } from "./user-menu";
 
 export function Footer() {
@@ -22,7 +21,14 @@ export function Footer() {
               <DropdownMenuItem asChild>
                 <a href="/settings"><span>Settings</span></a>
               </DropdownMenuItem>
-              <Logout />
+              <DropdownMenuItem asChild>
+                <form action={async () => {
+                  "use server"
+                  signOut({ redirect: true, redirectTo: "/" })
+                }}>
+                  <button type="submit" className="w-full items-start flex">Logout</button>
+                </form>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>

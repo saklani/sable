@@ -22,7 +22,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         passwordHash: null,
                     });
 
-                    await queries.createPlan({ userId: user.id })
+                    await queries.createUserPlan({ userId: user.id })
                     await queries.createUserPreferences({ userId: user.id })
                 } else {
                     user.id = existingUser.id

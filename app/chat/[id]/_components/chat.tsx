@@ -4,30 +4,11 @@ import { GetMessages, GetMessagesResponse, GetUserPreferences } from "@/lib/clie
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useChat } from "ai/react"
 import { usePathname } from "next/navigation"
-import { Markdown } from "./markdown"
-import { SwitchModels } from "./models"
 import { toast } from "sonner"
+import { AIMessage } from "./ai-message"
 import { DataDropdown } from "./data-dropdown"
-
-function UserMessage({ content }: { content: string }) {
-    return (
-        <div className="flex justify-end w-full">
-            <div className="text-sm bg-foreground/90 text-background  max-w-[500px] border py-2 px-4 rounded-full">
-                <p>{content}</p>
-            </div>
-        </div>
-    )
-}
-
-function AIMessage({ content }: { action?: string; content: string; }) {
-    return (
-        <div className="flex w-full py-[24px] gap-[8px]">
-            <div className="flex flex-col w-full py-2 px-6">
-                <Markdown>{content}</Markdown>
-            </div>
-        </div>
-    )
-}
+import { SwitchModels } from "./models"
+import { UserMessage } from "./user-message"
 
 export function Chat({ id }: { id: string }) {
     const { data: response1 } = useQuery<GetMessagesResponse>({ queryKey: ["chat", id], queryFn: () => fetch(`/api/chat/${id}/messages`).then(res => res.json()) })
@@ -87,9 +68,9 @@ export function UnmemoizedChat({ id, initialMessages, model }: { id: string, ini
                         }}
                     />
                 </form>
-                <div className="flex h-[32px] px-3 gap-[2px]">
+                <div className="flex h-[32px] px-3 gap-1">
                     <SwitchModels />
-                    <DataDropdown/>
+                    <DataDropdown id={id}/>
                 </div>
             </div>
         </div>

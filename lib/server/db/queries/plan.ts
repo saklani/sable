@@ -7,7 +7,7 @@ import { execute } from "./utils";
 /**
  * Creates a default free plan for new users
 */
-export async function createPlan({ userId }: Pick<schema.Plan, "userId">) {
+export async function createUserPlan({ userId }: Pick<schema.Plan, "userId">) {
     return execute(`create plan of user ${userId}`, async () => {
         await db.insert(schema.plan).values({
             userId,
@@ -34,7 +34,7 @@ export async function deletePlan({ userId }: Pick<schema.Plan, "id" | "userId">)
     })
 }
 
-export async function getPlan({ userId }: Pick<schema.Plan, "userId">) {
+export async function getUserPlan({ userId }: Pick<schema.Plan, "userId">) {
     return execute(
         `get plan of user ${userId}`,
         async () => db.query.plan.findFirst({ where: eq(schema.plan.userId, userId) })
@@ -59,4 +59,11 @@ export async function resetPlan() {
             endDate: sql`(unixepoch() + 28 * 24 * 60 * 60)`
         }).where(lt(schema.plan.endDate, sql`(unixepoch())`))
     )
+}
+
+
+export async function getUserStorageLimit({ userId }: Pick<schema.Plan, "userId">) {
+    return execute(`get user ${userId}`, async () => {
+        return await db.query.plan.findFirst({ where: eq(schema.plan.userId, userId), columns: { storageLimit: true } })
+    })
 }

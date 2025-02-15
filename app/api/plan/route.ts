@@ -10,7 +10,7 @@ import { GetPlanResponseSchema, PutPlanResponseSchema } from "@/lib/server/api/s
  */
 export async function GET() {
     return withAuth(async (userId) => {
-        const userPlan = await queries.getPlan({ userId })
+        const userPlan = await queries.getUserPlan({ userId })
         const validatedPlan = GetPlanResponseSchema.safeParse(userPlan);
         if (!validatedPlan.success) {
             console.error("[Plan Validation Error]", {

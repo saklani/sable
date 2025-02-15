@@ -22,3 +22,4 @@ export async function getUserPreferences({ userId }: Pick<schema.UserPreferences
         return await db.query.userPreferences.findFirst({ where: eq(schema.userPreferences.userId, userId), columns: { defaultModel: true } })
     })
 }
+

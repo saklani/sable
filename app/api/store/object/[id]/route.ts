@@ -1,5 +1,5 @@
 import { withAuth } from "@/lib/server/api/middleware";
-import { FileMetadataSchema } from "@/lib/server/api/schema";
+import { GetObjectResponseSchema } from "@/lib/server/api/schema";
 import { objects } from "@/lib/server/store/objects";
 import { NextRequest } from "next/server";
 
@@ -16,7 +16,7 @@ export async function GET(
         const url = await objects.get({ id, userId });
 
         // Validate response data
-        const validatedResponse = FileMetadataSchema.safeParse({ url });
+        const validatedResponse = GetObjectResponseSchema.safeParse({ url });
         if (!validatedResponse.success) {
             console.error("[Data Validation Error]", validatedResponse.error);
             return {
