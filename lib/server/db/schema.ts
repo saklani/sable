@@ -1,5 +1,6 @@
+import { randomUUID } from 'crypto'
 import { sql } from 'drizzle-orm/sql'
-import { integer, sqliteTable, text, unique, index, uniqueIndex } from 'drizzle-orm/sqlite-core'
+import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
 
 // Type definitions
 type UserRole = 'admin' | 'user'
@@ -37,6 +38,7 @@ export const chat = sqliteTable('chats', {
         .references(() => user.id, { onDelete: 'cascade' }),
     modelId: text('model_id')
         .references(() => model.id),
+    collectionId: text("collection_id").notNull().references(() => collection.id),
     systemPrompt: text('system_prompt'),
     lastMessageAt: integer('last_message_at', { mode: 'timestamp' }),
     messageCount: integer('message_count').notNull().default(0),
@@ -119,11 +121,27 @@ export const plan = sqliteTable('plans', {
     uniqueIndex('plan_user_id_unique').on(table.userId),
 ])
 
+
+export const collection = sqliteTable('collections', {
+    id: text('id').notNull().primaryKey().$defaultFn(() => randomUUID()),
+    userId: text('user_id')
+        .notNull()
+        .references(() => user.id, { onDelete: 'cascade' }),
+    name: text("name"),
+    fileIds: text("file_ids", { mode: "json" }).$type<string[]>()
+        .default(sql`(json_array())`),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (table) => [
+    index('collection_user_id_idx').on(table.userId),
+])
+
 // Type exports
 export type User = typeof user.$inferSelect
-export type UserPreferences = typeof userPreferences.$inferSelect 
+export type UserPreferences = typeof userPreferences.$inferSelect
 export type Chat = typeof chat.$inferSelect
 export type Message = typeof message.$inferSelect
 export type Model = typeof model.$inferSelect
 export type Object = typeof object.$inferSelect
 export type Plan = typeof plan.$inferSelect
+export type Collection = typeof collection.$inferSelect

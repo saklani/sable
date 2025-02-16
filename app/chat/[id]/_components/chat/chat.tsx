@@ -1,49 +1,50 @@
 "use client"
-import { Textarea } from "@/components/ui/textarea"
-import { GetMessages, GetMessagesResponse, GetUserPreferences } from "@/lib/client/types"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { useChat } from "ai/react"
-import { usePathname } from "next/navigation"
-import { toast } from "sonner"
-import { AIMessage } from "./ai-message"
-import { DataDropdown } from "./data-dropdown"
-import { SwitchModels } from "./models"
-import { UserMessage } from "./user-message"
+import { Textarea } from "@/components/ui/textarea";
+import { GetMessages } from "@/lib/client/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { useChat } from "ai/react";
+import { usePathname } from "next/navigation";
+import { toast } from "sonner";
+
+import { useChatData } from '../../hooks/useChatData'; // Adjust the import path if necessary
+import { AIMessage } from "./ai-message";
+import { DataDialog } from "./data-dialog";
+import { SwitchModels } from "./models";
+import { UserMessage } from "./user-message";
 
 export function Chat({ id }: { id: string }) {
-    const { data: response1 } = useQuery<GetMessagesResponse>({ queryKey: ["chat", id], queryFn: () => fetch(`/api/chat/${id}/messages`).then(res => res.json()) })
-    const { data: response2 } = useQuery<GetUserPreferences>({ queryKey: ["preferences"], queryFn: () => fetch("/api/user/preferences").then(res => res.json()) })
+    const { messages, preferences, isLoading, isError } = useChatData(id);
 
-    if (!response1?.data || !response2?.data) {
-        return <></>
-    }
+    if (isLoading) return <></>;
+    if (isError || !preferences) return <div>Error loading chat data.</div>;
 
-    return <UnmemoizedChat id={id} initialMessages={response1.data ?? []} model={response2.data.defaultModel} />
+    return (
+        <NonMemoizedChat
+            id={id}
+            initialMessages={messages}
+            model={preferences.defaultModel}
+        />
+    );
 }
 
-
-export function UnmemoizedChat({ id, initialMessages, model }: { id: string, initialMessages: GetMessages, model: string }) {
+export function NonMemoizedChat({ id, initialMessages, model }: { id: string, initialMessages: GetMessages, model: string }) {
     const pathname = usePathname()
     const queryClient = useQueryClient()
 
     const { messages, input, handleInputChange, handleSubmit } = useChat({
         id,
         initialMessages,
-        onResponse: () => {
-            if (pathname === "/chat") {
-                window.history.replaceState(null, '', `/chat/${id}`);
-                queryClient.invalidateQueries({ queryKey: ["chats"] })
-            }
-        },
+        onResponse: async () => queryClient.invalidateQueries({ queryKey: ["chats"] }),
         onError: (error) => {
+            console.error(error)
             toast(JSON.parse(error.message)["error"])
         },
-        body: { model }
+        body: { model },
     });
 
     return (
         <div className="flex flex-col flex-1 w-full items-center">
-            <div className="flex flex-col overflow-y-auto pt-3 pb-[96px] px-2 w-[calc(100%-24px)] max-w-3xl ">
+            <div className="flex flex-col overflow-y-auto pt-5 pb-[96px] px-2 w-[calc(100%-24px)] max-w-3xl ">
                 {messages.length === 0 ?
                     <h1 className="text-2xl">What can I help with?</h1> :
                     messages.map(m => (
@@ -70,7 +71,7 @@ export function UnmemoizedChat({ id, initialMessages, model }: { id: string, ini
                 </form>
                 <div className="flex h-[32px] px-3 gap-1">
                     <SwitchModels />
-                    <DataDropdown id={id}/>
+                    <DataDialog id={id} />
                 </div>
             </div>
         </div>

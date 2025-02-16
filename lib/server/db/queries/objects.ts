@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "../db";
 import * as schema from "../schema";
 import { execute } from "./utils";
@@ -30,5 +30,16 @@ export async function getObject({ id, userId }: Pick<schema.Object, "id" | "user
 export async function getObjectsByUserId({ userId }: Pick<schema.Object, "userId">) {
     return execute(`get all object of user ${userId}`, async () => {
         return db.select().from(schema.object).where(eq(schema.object.userId, userId)).orderBy(desc(schema.object.createdAt))
+    })
+}
+
+// TODO: Make less confusing
+export async function getObjectsByCollectionId({ id, userId }: Pick<schema.Collection, "id" | "userId">) {
+    return execute(`get all object of collection ${id}`, async () => {
+        const collection = await db.query.collection.findFirst({ where: and(eq(schema.collection.id, id), eq(schema.collection.userId, userId)) })
+        if (!collection) {
+            return []
+        }
+        return db.select().from(schema.object).where(inArray(schema.object.id, collection.fileIds ?? [])).orderBy(desc(schema.object.createdAt))
     })
 }

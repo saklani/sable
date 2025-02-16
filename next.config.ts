@@ -6,6 +6,6 @@ const nextConfig: NextConfig = {
 };
 
 export default MillionLint.next({
-  enabled: true,
+  enabled: false,
   rsc: true
 })(nextConfig);

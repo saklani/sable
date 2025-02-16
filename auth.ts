@@ -33,11 +33,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 return false
             }
         },
-        authorized({ request, auth }) {
-            const { pathname } = request.nextUrl
-            if (pathname === "/middleware-example") return !!auth
-            return true
-        },
         jwt({ token, user }) {
             if (user) {
                 token.id = user.id

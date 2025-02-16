@@ -50,7 +50,9 @@ function ChatItem({ id, title }: { id: string; title: string; }) {
         mutationFn: ({ id }: { id: string }) => fetch(`/api/chat/${id}`, { method: "DELETE" }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['chats'] })
-            router.push("/chat")
+            if (pathname.split('/').at(2) === id) {
+                router.push("/chat")
+            }
         },
     })
     return (

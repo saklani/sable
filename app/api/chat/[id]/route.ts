@@ -17,8 +17,8 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
                 errors: validatedChat.error.toString()
             });
             return {
-                error: "Invalid chats data format",
-                status: 500
+                error: "Chat not found",
+                status: 404
             };
         }
 
