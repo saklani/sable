@@ -1,4 +1,4 @@
-import { AudioItem, User } from '../types';
+import { AudioItem, User, Voice, Subscription } from '../types';
 
 // Mock data
 const mockUsers: User[] = [
@@ -29,6 +29,31 @@ const mockAudioItems: AudioItem[] = [
     tags: ['text', 'sample'],
   },
 ];
+
+const mockVoices: Voice[] = [
+  {
+    id: '1',
+    name: 'John',
+    language: 'en-US',
+    gender: 'male',
+    previewUrl: 'https://example.com/voice1.mp3',
+  },
+  {
+    id: '2',
+    name: 'Sarah',
+    language: 'en-US',
+    gender: 'female',
+    previewUrl: 'https://example.com/voice2.mp3',
+  },
+];
+
+const mockSubscription: Subscription = {
+  id: '1',
+  userId: '1',
+  plan: 'free',
+  status: 'active',
+  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+};
 
 // Mock API service
 export const mockApi = {
@@ -101,6 +126,43 @@ export const mockApi = {
       };
       mockAudioItems.push(newItem);
       return newItem;
+    },
+  },
+
+  voices: {
+    list: async (): Promise<Voice[]> => {
+      return mockVoices;
+    },
+
+    get: async (id: string): Promise<Voice> => {
+      const voice = mockVoices.find(v => v.id === id);
+      if (!voice) throw new Error('Voice not found');
+      return voice;
+    },
+  },
+
+  subscription: {
+    get: async (): Promise<Subscription> => {
+      return mockSubscription;
+    },
+
+    update: async (plan: 'free' | 'pro' | 'enterprise'): Promise<Subscription> => {
+      mockSubscription.plan = plan;
+      return mockSubscription;
+    },
+  },
+
+  files: {
+    upload: async (file: string): Promise<{ id: string; url: string; key: string }> => {
+      return {
+        id: String(Date.now()),
+        url: 'https://example.com/uploaded-file.mp3',
+        key: `files/${Date.now()}.mp3`,
+      };
+    },
+
+    getUrl: async (key: string): Promise<string> => {
+      return `https://example.com/${key}`;
     },
   },
 }; 
